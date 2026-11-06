@@ -1,0 +1,22 @@
+[package]
+name = "video-downloader"
+version = "0.12.31"
+edition = "2021"
+authors = ["Unrud <unrud@outlook.com>"]
+license = "GPL-3.0-or-later"
+description = "Download videos from websites with an easy-to-use interface"
+categories = ["multimedia", "gui"]
+keywords = ["video", "downloader", "yt-dlp", "gtk"]
+
+[dependencies]
+gtk = { package = "gtk4", version = "0.11", features = ["v4_12"] }
+adw = { package = "libadwaita", version = "0.9", features = ["v1_8"] }
+glib = "0.22"
+gio = "0.22"
+gdk-pixbuf = "0.22"
+once_cell = "1.21"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+gettext-rs = "0.8"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+yt-dlp = "2.10"

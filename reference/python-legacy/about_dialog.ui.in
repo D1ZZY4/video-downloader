@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2020–2025 Unrud <unrud@outlook.com>
+
+This file is part of Video Downloader.
+
+Video Downloader is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Video Downloader is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Video Downloader.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<interface>
+  <requires lib="libadwaita" version="1.0"/>
+  <object class="AdwAboutWindow" id="about_window">
+    <property name="modal">1</property>
+    <property name="destroy-with-parent">1</property>
+    <!-- Main page -->
+    <property name="application-icon">com.github.unrud.VideoDownloader</property>
+    <property name="application-name" translatable="yes">Video Downloader</property>
+    <property name="developer-name">Unrud</property>
+    <property name="version">@VERSION@</property>
+    <!-- What's new -->
+    <property name="release-notes">@releasenotes@</property>
+    <!-- Details -->
+    <property name="website">https://github.com/unrud/video-downloader</property>
+    <!-- Troubleshooting -->
+    <property name="issue-url">https://github.com/unrud/video-downloader/issues</property>
+    <property name="debug-info-filename">video-downloader.txt</property>
+    <!-- Credits and Acknowledgements -->
+    <property name="developers">Unrud
+Adrien Plazas
+Gustavo Peredo
+Dave Patrick
+Artem Polishchuk
+Óscar Fernández Díaz</property>
+    <property name="artists">Tobias Bernard</property>
+    <property name="translator-credits">Ahmed Najmawi
+Åke Engelbrektson
+Albano Battistella
+Ali Khomami P.
+Allan Nordhøy
+AngryPenguinPL
+AnjaRuni
+Bahrom Miragzamov
+Balazs
+Christian Elbrianno
+Dan
+dedakir923
+delvani
+Eder Etxebarria Rojo
+Elvis
+FCastro32
+gallegonovato
+GiannosOB
+Gustavo Machado Peredo
+Heimen Stoffels
+HenRy
+Hoshmand M. Qadir
+Host1c
+Ícar N. S.
+Ihor Hordiichuk
+Irénée THIRION
+Ivan Lukan
+Jiri Grönroos
+J. Lavoie
+klewf
+Lee Junseo
+Littux
+Luna Jernberg
+L.Yang
+Manuela Silva
+MartinIIoT
+mere
+MikayelB
+Milan Šalka
+Milo Ivir
+Ngô Quang Đại
+Oğuz Ersen
+Oleksandr Pidlisniak
+Onnar Rick
+Óscar Fernández Díaz
+ovari
+P. A.
+pau oliveres
+Peter Dave Hello
+Philip Goto
+Piotr Wieczorek
+Priit Jõerüüt
+Rafael Mardojai CM
+Reza Almanda
+Roger VC
+Roy Meissner
+Ryo Nakano
+Sabri Ünal
+Scrambled777
+sicklylife
+Simeon Thuet
+SPiRiT
+Stratos Petrelis
+taijuin Lee
+TamilNeram
+Temuri Doghonadze
+The Best Way
+Thiago Carmona
+Thorfin89
+Troja
+tuxanator
+Umidjon Almasov
+Ümit Solmaz
+Valeriy Manzhos
+vikdevelop
+Vojtěch Perník
+Yago Raña Gayoso
+Yaron Shahrabani
+yoval keshet
+Yurt Page</property>
+    <!-- Legal -->
+    <property name="copyright">Copyright © 2019–2025 Unrud</property>
+    <property name="license-type">gpl-3-0</property>
+  </object>
+</interface>

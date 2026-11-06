@@ -12,198 +12,20 @@
         "--socket=wayland",
         "--filesystem=xdg-download/VideoDownloader:create"
     ],
-    "cleanup": [
-        "/include",
-        "/lib/pkgconfig",
-        "/man",
-        "/share/doc",
-        "/share/gtk-doc",
-        "/share/man",
-        "/share/pkgconfig",
-        "*.la",
-        "*.a"
-    ],
     "modules": [
-        {
-            "name": "pyxattr",
-            "buildsystem": "simple",
-            "build-commands": [
-                "pip3 install --no-build-isolation --prefix=/app ."
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/iustin/pyxattr/archive/refs/tags/v0.8.1.tar.gz",
-                    "sha256": "ce7ef783e751b96610a6eb32fc49a89340b5dc575fbe15054ce7935ebaf49edb",
-                    "x-checker-data": {
-                        "type": "json",
-                        "url": "https://api.github.com/repos/iustin/pyxattr/releases/latest",
-                        "version-query": ".tag_name",
-                        "url-query": "\"https://github.com/iustin/pyxattr/archive/refs/tags/\" + $version + \".tar.gz\""
-                    }
-                }
-            ]
-        },
-        {
-            "name": "mutagen",
-            "buildsystem": "simple",
-            "build-commands": [
-                "pip3 install --no-build-isolation --prefix=/app ."
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/quodlibet/mutagen/archive/refs/tags/release-1.48.1.tar.gz",
-                    "sha256": "779f18015af1b28af59bd80c6292aa8151ca7e5fe6a36e17a394dda515981a5e",
-                    "x-checker-data": {
-                        "type": "json",
-                        "url": "https://api.github.com/repos/quodlibet/mutagen/releases/latest",
-                        "version-query": ".tag_name",
-                        "url-query": "\"https://github.com/quodlibet/mutagen/archive/refs/tags/\" + $version + \".tar.gz\""
-                    }
-                }
-            ]
-        },
-        {
-            "name": "pycryptodomex",
-            "buildsystem": "simple",
-            "build-commands": [
-                "touch .separate_namespace",
-                "pip3 install --no-build-isolation --prefix=/app ."
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/Legrandin/pycryptodome/archive/refs/tags/v4.2.0.tar.gz",
-                    "sha256": "505da9787103d1fc451aba677223db65c9b870b273f132fa862e918393349123",
-                    "x-checker-data": {
-                        "type": "json",
-                        "url": "https://api.github.com/repos/Legrandin/pycryptodome/tags",
-                        "version-query": "[.[].name | select(test(\"^v?[0-9.]+$\"))] | sort_by(sub(\"^v\"; \"\") | split(\".\") | map(tonumber))[-1]",
-                        "url-query": "\"https://github.com/Legrandin/pycryptodome/archive/refs/tags/\" + $version + \".tar.gz\""
-                    }
-                }
-            ]
-        },
-        {
-            "name": "websockets",
-            "buildsystem": "simple",
-            "build-commands": [
-                "pip3 install --no-build-isolation --prefix=/app ."
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/aaugustin/websockets/archive/refs/tags/17.3.tar.gz",
-                    "sha256": "f80496c1d689e629c184055e15e27734251c7214841d486428c15bed185162ee",
-                    "x-checker-data": {
-                        "type": "json",
-                        "url": "https://api.github.com/repos/aaugustin/websockets/tags",
-                        "version-query": "[.[].name | select(test(\"^v?[0-9.]+$\"))] | sort_by(sub(\"^v\"; \"\") | split(\".\") | map(tonumber))[-1]",
-                        "url-query": "\"https://github.com/aaugustin/websockets/archive/refs/tags/\" + $version + \".tar.gz\""
-                    }
-                }
-            ]
-        },
-        {
-            "name": "brotli",
-            "buildsystem": "simple",
-            "build-commands": [
-                "pip3 install --no-build-isolation --prefix=/app ."
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/google/brotli/archive/refs/tags/v1.2.1.tar.gz",
-                    "sha256": "98d35d11a78dc453aebb7d10c3748f3f73ff78c8267c0dc697b8631f67bf7e8f",
-                    "x-checker-data": {
-                        "type": "json",
-                        "url": "https://api.github.com/repos/google/brotli/releases/latest",
-                        "version-query": ".tag_name",
-                        "url-query": "\"https://github.com/google/brotli/archive/refs/tags/\" + $version + \".tar.gz\""
-                    }
-                }
-            ]
-        },
-        {
-            "name": "deno",
-            "buildsystem": "simple",
-            "build-commands": [
-                "install -Dt /app/bin deno"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/denoland/deno/releases/download/v2.9.8/deno-x86_64-unknown-linux-gnu.zip",
-                    "sha256": "e890975bc2549807bbcc0b584ffafda72cc7c93349dd99c80483dd784f6c4609",
-                    "x-checker-data": {
-                        "type": "json",
-                        "url": "https://api.github.com/repos/denoland/deno/releases/latest",
-                        "version-query": ".tag_name",
-                        "url-query": ".assets[] | select(.name == \"deno-x86_64-unknown-linux-gnu.zip\").browser_download_url"
-                    },
-                    "only-arches": [
-                        "x86_64"
-                    ]
-                },
-                {
-                    "type": "archive",
-                    "url": "https://github.com/denoland/deno/releases/download/v2.9.8/deno-aarch64-unknown-linux-gnu.zip",
-                    "sha256": "d49596c20b9788cf8f5d8ddf644103d4bde56ed239753f0bdb92ba9361d51905",
-                    "x-checker-data": {
-                        "type": "json",
-                        "url": "https://api.github.com/repos/denoland/deno/releases/latest",
-                        "version-query": ".tag_name",
-                        "url-query": ".assets[] | select(.name == \"deno-aarch64-unknown-linux-gnu.zip\").browser_download_url"
-                    },
-                    "only-arches": [
-                        "aarch64"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "yt-dlp-ejs",
-            "buildsystem": "simple",
-            "build-commands": [
-                "pip3 install --prefix=/app \"$(echo *.whl)\""
-            ],
-            "sources": [
-                {
-                    "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/e3/bd/520769863744b669440a924271a6159ddd82ad5ae26b4ac4d4b69e9f8d44/yt_dlp_ejs-0.8.0-py3-none-any.whl",
-                    "sha256": "79300e5fca7f937a1eeede11f0456862c1b41107ce1d726871e0207424f4bdb4",
-                    "x-checker-data": {
-                        "type": "pypi",
-                        "name": "yt-dlp-ejs",
-                        "packagetype": "bdist_wheel"
-                    }
-                }
-            ]
-        },
-        {
-            "name": "yt-dlp",
-            "buildsystem": "simple",
-            "build-commands": [
-                "pip3 install --no-dependencies --prefix=/app \"$(echo *.whl)[default]\""
-            ],
-            "sources": [
-                {
-                    "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/7f/3d/16ea7d5638cf585991f2c5705e8083688dde633d32d0871f2404e0f4d827/yt_dlp-2026.10.26-py3-none-any.whl",
-                    "sha256": "a05c5b5d8562f7e8a62f5334348b406af4930d56d3a65f8021d14af0e22339ae",
-                    "x-checker-data": {
-                        "type": "pypi",
-                        "name": "yt-dlp",
-                        "packagetype": "bdist_wheel"
-                    }
-                }
-            ]
-        },
         {
             "name": "video-downloader",
             "builddir": true,
-            "buildsystem": "meson",
+            "buildsystem": "simple",
+            "build-commands": [
+                "cargo build --release",
+                "install -Dm755 target/release/video-downloader /app/bin/video-downloader",
+                "install -Dm644 data/com.github.unrud.VideoDownloader.desktop.in /app/share/applications/com.github.unrud.VideoDownloader.desktop",
+                "install -Dm644 data/com.github.unrud.VideoDownloader.svg /app/share/icons/hicolor/scalable/apps/com.github.unrud.VideoDownloader.svg",
+                "install -Dm644 data/com.github.unrud.VideoDownloader-symbolic.svg /app/share/icons/hicolor/symbolic/apps/com.github.unrud.VideoDownloader-symbolic.svg",
+                "install -Dm644 data/com.github.unrud.VideoDownloader.gschema.xml /app/share/glib-2.0/schemas/com.github.unrud.VideoDownloader.gschema.xml",
+                "glib-compile-schemas /app/share/glib-2.0/schemas"
+            ],
             "sources": [
                 {
                     "type": "git",
