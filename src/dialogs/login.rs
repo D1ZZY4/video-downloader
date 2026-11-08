@@ -1,5 +1,7 @@
 use adw::prelude::*;
+use std::time::Duration;
 
+use crate::dialogs::common;
 use crate::window::Window;
 
 /// Ask the user for username/password authentication.
@@ -7,42 +9,16 @@ pub fn request(parent: &Window) -> Option<(String, String)> {
     let (tx, rx) = std::sync::mpsc::channel();
     let parent = parent.clone();
     gtk::glib::MainContext::default().invoke(move || {
-        let dialog = adw::Dialog::builder().build();
-        let clamp = adw::Clamp::builder().build();
-        let vbox = gtk::Box::builder()
-            .orientation(gtk::Orientation::Vertical)
-            .spacing(12)
-            .margin_top(18)
-            .margin_bottom(18)
-            .margin_start(18)
-            .margin_end(18)
-            .build();
-        let label = gtk::Label::builder()
-            .label("The video is not public.")
-            .xalign(0.0)
-            .build();
+        let (dialog, vbox, cancel_btn, ok_btn) = common::build_auth_dialog();
         let user_entry = adw::EntryRow::builder()
-            .title("Username")
+            .title(crate::i18n::tr("Username"))
             .input_purpose(gtk::InputPurpose::Email)
             .build();
-        let pass_entry = adw::PasswordEntryRow::builder().title("Password").build();
-        let btn_box = gtk::Box::builder()
-            .orientation(gtk::Orientation::Horizontal)
-            .spacing(12)
-            .halign(gtk::Align::End)
+        let pass_entry = adw::PasswordEntryRow::builder()
+            .title(crate::i18n::tr("Password"))
             .build();
-        let cancel_btn = gtk::Button::builder().label("Cancel").build();
-        let ok_btn = gtk::Button::builder().label("OK").build();
-        ok_btn.add_css_class("suggested-action");
-
-        btn_box.append(&cancel_btn);
-        btn_box.append(&ok_btn);
-        vbox.append(&label);
-        vbox.append(&user_entry);
-        vbox.append(&pass_entry);
-        vbox.append(&btn_box);
-        clamp.set_child(Some(&vbox));
-        dialog.set_child(Some(&clamp));
+        common::insert_entry(&vbox, &user_entry);
+        common::insert_entry(&vbox, &pass_entry);
 
         let tx_clone = tx.clone();
         let dialog_cancel = dialog.clone();
@@ -53,12 +29,18 @@ pub fn request(parent: &Window) -> Option<(String, String)> {
         let user_c = user_entry.clone();
         let pass_c = pass_entry.clone();
         let dialog_ok = dialog.clone();
+        let tx_ok = tx.clone();
         ok_btn.connect_clicked(move |_| {
-            let _ = tx.send(Some((user_c.text().to_string(), pass_c.text().to_string())));
+            let _ = tx_ok.send(Some((user_c.text().to_string(), pass_c.text().to_string())));
             dialog_ok.close();
+        });
+        // Esc / X without clicking a button must still unblock the worker.
+        let tx_closed = tx.clone();
+        dialog.connect_closed(move |_| {
+            let _ = tx_closed.send(None);
         });
 
         dialog.present(Some(&parent));
     });
-    rx.recv().unwrap_or(None)
+    crate::utils::recv_timeout(&rx, Duration::from_secs(600)).unwrap_or(None)
 }

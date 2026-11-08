@@ -22,6 +22,35 @@ Based on [yt-dlp](https://github.com/yt-dlp/yt-dlp).
   * [Fedora](https://src.fedoraproject.org/rpms/video-downloader): `sudo dnf install video-downloader`
   * [Arch User Repository](https://aur.archlinux.org/packages/video-downloader)
 
+## Building from source
+
+The application is implemented in Rust (GTK4 + libadwaita) and builds with
+Cargo. The Python implementation is kept only as a behavioral reference
+under `reference/python-legacy/` and is not needed at runtime.
+
+```bash
+cargo build
+cargo run
+```
+
+System dependencies: GTK4 4.24, libadwaita 1.10, glib-compile-schemas,
+msgfmt, ffmpeg (used for MP3 conversion, thumbnail scaling and subtitle
+conversion). yt-dlp and ffmpeg binaries for the Rust engine are downloaded
+on first use to `~/.local/share/video-downloader/libs/`.
+
+## Development
+
+```bash
+cargo fmt --check
+cargo check
+cargo test
+cargo clippy --all-targets
+```
+
+Unit tests cover pure helpers (path expansion, resolution selection, state
+transitions, filename shortening, WEBVTT fixing, download-info formatting).
+Run them with `cargo test`.
+
 ## Translation
 
 We use [Weblate](https://hosted.weblate.org/engage/video-downloader/) to translate the UI, so feel free to contribute translations over there.

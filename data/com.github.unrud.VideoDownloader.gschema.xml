@@ -21,8 +21,20 @@
       <default>'audio'</default>
     </key>
 
-    <key type="u" name="resolution">
-      <default>1080</default>
+    <key type="s" name="video-quality">
+      <default>'best'</default>
+    </key>
+
+    <key type="s" name="audio-quality">
+      <default>'best'</default>
+    </key>
+
+    <key type="s" name="output-filename">
+      <default>''</default>
+    </key>
+
+    <key type="s" name="audio-format">
+      <default>'mp3'</default>
     </key>
   </schema>
 </schemalist>

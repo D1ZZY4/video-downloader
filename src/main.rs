@@ -1,6 +1,6 @@
 mod dialogs {
-    #[path = "about.rs"]
-    pub mod about;
+    #[path = "common.rs"]
+    pub mod common;
     #[path = "folder.rs"]
     pub mod folder;
     #[path = "login.rs"]
@@ -9,11 +9,22 @@ mod dialogs {
     pub mod password;
     #[path = "playlist.rs"]
     pub mod playlist;
-    #[path = "shortcuts.rs"]
-    pub mod shortcuts;
+    #[path = "quality_select.rs"]
+    pub mod quality_select;
 }
-#[path = "downloader/engine.rs"]
-mod downloader;
+mod downloader {
+    #[path = "download.rs"]
+    pub mod download;
+    #[path = "extract_metadata.rs"]
+    pub mod extract_metadata;
+    #[path = "quality.rs"]
+    pub mod quality;
+    #[path = "queue.rs"]
+    pub mod queue;
+    #[path = "thumbnail.rs"]
+    pub mod thumbnail;
+    pub use queue::DownloadEngine;
+}
 mod i18n;
 mod model;
 #[path = "utils/helpers.rs"]
@@ -24,12 +35,21 @@ mod window;
 use adw::prelude::*;
 use window::Window;
 
-fn main() {
+use std::sync::{Mutex, OnceLock};
+
+static PENDING_URL: OnceLock<Mutex<String>> = OnceLock::new();
+
+fn pending_url() -> &'static Mutex<String> {
+    PENDING_URL.get_or_init(|| Mutex::new(String::new()))
+}
+
+fn main() -> glib::ExitCode {
     i18n::init();
     glib::set_application_name(&i18n::tr("Video Downloader"));
     // Ensure gtk/libadwaita init
     let app = adw::Application::builder()
         .application_id("com.github.unrud.VideoDownloader")
+        .flags(gio::ApplicationFlags::empty())
         .build();
 
     app.add_main_option(
@@ -41,17 +61,34 @@ fn main() {
         Some("URL"),
     );
     app.connect_handle_local_options(|app, options| {
-        if let Some(url) = options.lookup_value("url", Some(&glib::VariantType::new("s").unwrap())) {
-            if let Some(s) = url.get::<String>() {
-                let _ = app.register(Option::<&gio::Cancellable>::None);
-                app.activate_action("new-window", Some(&s.to_variant()));
-                return std::ops::ControlFlow::Break(glib::ExitCode::from(0));
-            }
+        let Some(url) = options.lookup_value("url", Some(&glib::VariantType::new("s").unwrap()))
+        else {
+            return std::ops::ControlFlow::Continue(());
+        };
+        let Some(s) = url.get::<String>() else {
+            return std::ops::ControlFlow::Continue(());
+        };
+        if !app.is_registered()
+            && let Err(e) = app.register(Option::<&gio::Cancellable>::None)
+        {
+            eprintln!("Failed to register: {}", e);
+            return std::ops::ControlFlow::Break(glib::ExitCode::from(1));
+        }
+        if app.is_remote() {
+            app.activate_action("new-window", Some(&s.to_variant()));
+            return std::ops::ControlFlow::Break(glib::ExitCode::from(0));
+        }
+        if let Ok(mut slot) = pending_url().lock() {
+            *slot = s;
         }
         std::ops::ControlFlow::Continue(())
     });
     app.connect_activate(|app| {
-        new_window(app, "");
+        let url = pending_url()
+            .lock()
+            .map(|mut g| std::mem::take(&mut *g))
+            .unwrap_or_default();
+        new_window(app, &url);
     });
     app.connect_window_removed(|_, win| {
         win.destroy();
@@ -77,7 +114,11 @@ fn main() {
     });
     app.add_action(&quit_action);
 
-    app.run();
+    let exit = app.run();
+    if exit != glib::ExitCode::SUCCESS {
+        eprintln!("Application exited with code {:?}", exit);
+    }
+    exit
 }
 
 fn new_window(app: &adw::Application, url: &str) {
@@ -85,7 +126,7 @@ fn new_window(app: &adw::Application, url: &str) {
     window.set_icon_name(Some("com.github.unrud.VideoDownloader"));
     {
         let model = window.model();
-        let mut m = model.lock().unwrap();
+        let mut m = crate::utils::lock_or_recover(&model);
         if let Some(m) = m.as_mut() {
             m.url = url.to_string();
         }

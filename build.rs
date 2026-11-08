@@ -5,7 +5,7 @@ use std::process::Command;
 fn main() {
     println!("cargo:rerun-if-changed=data/com.github.unrud.VideoDownloader.gschema.xml");
     println!("cargo:rerun-if-changed=po");
-    println!("cargo:rerun-if-changed=ui");
+    println!("cargo:rerun-if-changed=src/window/view.rs");
 
     let out_dir = std::env::var("OUT_DIR").unwrap();
 

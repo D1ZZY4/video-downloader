@@ -1,7 +1,7 @@
 [package]
 name = "video-downloader"
 version = "0.12.31"
-edition = "2021"
+edition = "2024"
 authors = ["Unrud <unrud@outlook.com>"]
 license = "GPL-3.0-or-later"
 description = "Download videos from websites with an easy-to-use interface"
@@ -9,8 +9,8 @@ categories = ["multimedia", "gui"]
 keywords = ["video", "downloader", "yt-dlp", "gtk"]
 
 [dependencies]
-gtk = { package = "gtk4", version = "0.11", features = ["v4_12"] }
-adw = { package = "libadwaita", version = "0.9", features = ["v1_8"] }
+gtk = { package = "gtk4", version = "0.11", features = ["v4_24"] }
+adw = { package = "libadwaita", version = "0.9", features = ["v1_10", "gtk_v4_24"] }
 glib = "0.22"
 gio = "0.22"
 gdk-pixbuf = "0.22"
@@ -20,3 +20,9 @@ serde_json = "1"
 gettext-rs = "0.8"
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 yt-dlp = "2.10"
+libc = "0.2"
+
+[lints.clippy]
+single_component_path_imports = "deny"
+unnecessary_to_owned = "deny"
+unused_unit = "deny"
